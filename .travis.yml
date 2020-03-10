@@ -4,6 +4,7 @@ services:
     - docker
 
 before_install:
+    - cd frontend
     - docker build -t teemo2020/docker-react -f Dockerfile.dev .
 
 script:
