@@ -7,8 +7,8 @@ before_install:
     - cd complex
     - docker build -t teemo2020/react-test -f ./client/Dockerfile.dev ./client
 
-script:
-    - docker run -e CI=true teemo2020/react-test npm test
+script: 
+    - docker run teemo2020/react-test npm test -- --coverage
 
 after_success:
     - docker build -t teemo2020/multi-client -f ./client 
