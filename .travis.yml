@@ -8,7 +8,6 @@ before_install:
     - docker build -t teemo2020/react-test -f ./client/Dockerfile.dev ./client
 
 script:
-    - chmod +x node_modules/.bin/react-scripts 
     - docker run -e CI=true teemo2020/react-test npm test
 
 after_success:
