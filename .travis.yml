@@ -1,26 +1,29 @@
 sudo: required
-language: generic 
 services:
     - docker
-
+env:
+    global:
+        - SHA=$(git rev-parse HEAD)
+        - CLOUDSDK_CORE_DISABLE_PROMPTS=1
 before_install:
-    - cd complex
+    - openssl aes-256-cbc -K $encrypted_0c35eebf403c_key -iv $encrypted_0c35eebf403c_iv -in multi-k8s-272701-4fee724cd59e.json.enc -out multi-k8s-272701-4fee724cd59e.json -d
+    - cd complex_k8s
+    - curl https://sdk.cloud.google.com | bash > /dev/null;
+    - source $HOME/google-cloud-sdk/path.bash.inc
+    - gcloud components update kubectl
+    - gcloud auth activate-service-account --key-file service-account.json
+    - gcloud config set project multi-k8s-272701
+    - gcloud config set compute/zone australia-southeast1-a
+    - gcloud container clusters get-credentials multi-cluster
+    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
     - docker build -t teemo2020/react-test -f ./client/Dockerfile.dev ./client
 
 script:
-    - docker run -e CI=true teemo2020/react-test npm test
+    - docker run -e CI=true teemo2020/react-test npm run test
 
-after_success:
-    - docker build -t teemo2020/multi-client ./client 
-    - docker build -t teemo2020/multi-nginx ./nginx
-    - docker build -t teemo2020/multi-server ./server
-    - docker build -t teemo2020/multi-worker ./worker
-
-#Log in to the docker CLI
-    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
-
-#Take those images and push them to docker hub
-    - docker push teemo2020/multi-client
-    - docker push teemo2020/multi-nginx
-    - docker push teemo2020/multi-server
-    - docker push teemo2020/multi-worker
+deploy:
+    provider: script
+    script: bash ./deploy.sh
+    on:
+        branch: master
+        
