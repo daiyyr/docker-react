@@ -1,6 +1,6 @@
-docker build -t teemo/multi-client:latest -t teemo/multi-client:$SHA -f ./client/Dockerfile ./client
-docker build -t teemo/multi-server:latest -t teemo/multi-server:$SHA -f ./server/Dockerfile ./server
-docker build -t teemo/multi-worker:latest -t teemo/multi-worker:$SHA -f ./worker/Dockerfile ./worker
+docker build -t teemo2020/multi-client:latest -t teemo2020/multi-client:$SHA -f ./client/Dockerfile ./client
+docker build -t teemo2020/multi-server:latest -t teemo2020/multi-server:$SHA -f ./server/Dockerfile ./server
+docker build -t teemo2020/multi-worker:latest -t teemo2020/multi-worker:$SHA -f ./worker/Dockerfile ./worker
 docker push teemo2020/multi-client:latest
 docker push teemo2020/multi-client:$SHA
 docker push teemo2020/multi-server:latest
